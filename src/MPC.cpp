@@ -70,6 +70,51 @@ class FG_eval {
       fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
       fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
+
+        //
+    // Setup Constraints
+    //
+    // NOTE: In this section you'll setup the model constraints.
+
+    // Initial constraints
+    //
+    // We add 1 to each of the starting indices due to cost being located at
+    // index 0 of `fg`.
+    // This bumps up the position of all the other values.
+    fg[1 + x_start] = vars[x_start];
+    fg[1 + y_start] = vars[y_start];
+    fg[1 + psi_start] = vars[psi_start];
+    fg[1 + v_start] = vars[v_start];
+    fg[1 + cte_start] = vars[cte_start];
+    fg[1 + epsi_start] = vars[epsi_start];
+
+    // The rest of the constraints
+    for (int t = 1; t < N; t++) {
+      // The state at time t+1 .
+      AD<double> x1 = vars[x_start + t];
+      AD<double> y1 = vars[y_start + t];
+      AD<double> psi1 = vars[psi_start + t];
+      AD<double> v1 = vars[v_start + t];
+      AD<double> cte1 = vars[cte_start + t];
+      AD<double> epsi1 = vars[epsi_start + t];
+
+      // The state at time t.
+      AD<double> x0 = vars[x_start + t - 1];
+      AD<double> y0 = vars[y_start + t - 1];
+      AD<double> psi0 = vars[psi_start + t - 1];
+      AD<double> v0 = vars[v_start + t - 1];
+      AD<double> cte0 = vars[cte_start + t - 1];
+      AD<double> epsi0 = vars[epsi_start + t - 1];
+
+      // Only consider the actuation at time t.
+      AD<double> delta0 = vars[delta_start + t - 1];
+      AD<double> a0 = vars[a_start + t - 1];
+
+      AD<double> f0 = 0.0;
+      for (int i = 0; i < coeffs.size(); i++) {
+        f0 += coeffs[i] * CppAD::pow(x0, i);
+      }
+    }
   }
 };
 
