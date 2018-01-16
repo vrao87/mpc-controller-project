@@ -92,12 +92,25 @@ int main() {
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
 
+          // Number of waypoints
+          const int N = ptsx.size(); 
           /*
           * TODO: Calculate steering angle and throttle using MPC.
           *
           * Both are in between [-1, 1].
           *
           */
+
+            // Convert to the vehicle coordinate system
+          Eigen::VectorXd ptsx_veh(N);
+          Eigen::VectorXd ptsy_veh(N);
+          for(int i = 0; i < N; i++) {
+            const double dx = ptsx[i] - px;
+            const double dy = ptsy[i] - py;
+            ptsx_veh[i] = dx * cos(psi) - dy * sin(psi);
+            ptsy_veh[i] = dy * cos(psi) + dx * sin(psi);
+          }
+
           double steer_value;
           double throttle_value;
 
