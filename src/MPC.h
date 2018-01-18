@@ -4,7 +4,10 @@
 #include <vector>
 #include "Eigen-3.3/Eigen/Core"
 
+#define LAT 0.1 //considering latency of 100ms
 using namespace std;
+
+
 
 class MPC {
  public:

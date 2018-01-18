@@ -101,7 +101,7 @@ int main() {
           *
           */
 
-            // Convert to the vehicle coordinate system
+          /* Convert to the vehicle coordinate system */
           Eigen::VectorXd ptsx_veh(N);
           Eigen::VectorXd ptsy_veh(N);
           for(int i = 0; i < N; i++) {
@@ -111,13 +111,26 @@ int main() {
             ptsy_veh[i] = dy * cos(psi) + dx * sin(psi);
           }
 
+
+          auto coeffs = polyfit(ptsx_veh, ptsy_veh, 3); // Fit polynomial of third degree
+          const double cte = coeffs[0];
+          const double epsi = -atan(coeffs[1]); //-f'(0)
+
+          /* In car's local co-ordinates, x, y and psi are 0 since car is at origin */
+          Eigen::VectorXd state(6);
+          state << 0.0, 0.0, 0.0, v, cte, epsi; 
+          
           double steer_value;
           double throttle_value;
+
+          auto vars = mpc.Solve(state, coeffs);
+          steer_value = vars[0];
+          throttle_value = vars[1];
 
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
           // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          msgJson["steering_angle"] = steer_value;
+          msgJson["steering_angle"] = -steer_value/deg2rad(25);
           msgJson["throttle"] = throttle_value;
 
           //Display the MPC predicted trajectory 
