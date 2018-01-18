@@ -107,8 +107,8 @@ int main() {
           for(int i = 0; i < N; i++) {
             const double dx = ptsx[i] - px;
             const double dy = ptsy[i] - py;
-            ptsx_veh[i] = dx * cos(psi) - dy * sin(psi);
-            ptsy_veh[i] = dy * cos(psi) + dx * sin(psi);
+            ptsx_veh[i] = dx * cos(-psi) - dy * sin(-psi);
+            ptsy_veh[i] = dy * cos(-psi) + dx * sin(-psi);
           }
 
 
