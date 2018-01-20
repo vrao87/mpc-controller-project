@@ -263,5 +263,11 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
   output.push_back(solution.x[delta_start]);
   output.push_back(solution.x[a_start]);
+
+  //save predicted trajectory for plotting
+  for (int i = 0; i < N; i++) {
+    output.push_back(solution.x[x_start + i]);
+    output.push_back(solution.x[y_start + i]);
+  }
   return output;
 }
