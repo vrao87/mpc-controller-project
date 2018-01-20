@@ -92,6 +92,9 @@ int main() {
           double psi = j[1]["psi"];
           double v_mph = j[1]["speed"];
 
+          double delta = j[1]["steering_angle"];
+          double acc = j[1]["throttle"];
+
           // Convert mph to m/s
           const double v = v_mph * 0.447;// mph to m/s
 
@@ -103,6 +106,15 @@ int main() {
           * Both are in between [-1, 1].
           *
           */
+          // project the state ahead to account for latency
+          //const double latency = 0.1;
+          // px = px + v  * cos(psi) * latency;
+          // py = 0;
+          // psi = -v * delta * latency/Lf;
+          // epsi = -atan(coeffs[1]) + psi; 
+          // cte= polyeval(coeffs,0)+ v * sin(epsi)*latency;
+          // v += acc * latency;
+          // state << px,py,psi,cte,epsi;
 
           /* Convert to the vehicle coordinate system */
           Eigen::VectorXd ptsx_veh(N);
@@ -116,7 +128,7 @@ int main() {
 
 
           auto coeffs = polyfit(ptsx_veh, ptsy_veh, 3); // Fit polynomial of third degree
-          const double cte = coeffs[0];
+          const double cte = polyeval(coeffs, 0);  // At x = 0
           const double epsi = -atan(coeffs[1]); //-f'(0)
 
           /* In car's local co-ordinates, x, y and psi are 0 since car is at origin */
