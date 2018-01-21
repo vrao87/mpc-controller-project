@@ -50,3 +50,17 @@ The objective of the model is to find the optimum value of a and delta that will
  
  ## Timestep Length and Elapsed Duration
  The number of points(N) and the time interval(dt) define the prediction horizon. The number of points impacts the controller performance as well. A large value of N and small value of dt reduced the performance and also since there are too many points to process, it would affect the performance of model as well. As per the recommendation in lessons to have relatively larger N and small dt and with some trial and error, I arrived at a suitable value of N and dt as 12 and 0.1.
+ 
+ ## Polynomial Fitting and MPC Preprocessing
+ Way point co-ordinates as well as car's location is provided by simulator in Map co-ordinates system. Once the way point and car's state variables are recieved from simulator, waypoints are transformed to local co-ordinates of car. Using transformed waypoint, a third degree polynomial is fitted using the utility function. Current cross track error cte, and orientation error psi, can be computed using the co-efficients of polynomial.
+ 
+ ## Handling latency
+  To handle latency in system, I have projected the state of the car in future by 'latency' time period which is 100ms(0.1s). Based on the suggestions from discussion forum, I have considered latency before transforming the way points to car co-ordinates. State as received from the simulator is projected ahead in time and the waypoints are then transformed to this new predicted state of the car. Polynomial fitting and subsequent cte and epsi calculation is done after this step.
+ 
+ State of the car to be fed into the solver is 
+ 0.0, 0.0, 0.0, v, cte, epsi
+ x, y and psi are 0 since at any instant the current position and orientation of car is considered to be the origin.
+ Finally, the returned values of steering and throttle from the solver is passed on to simulator in required format(steering is multiplied by -1 to account for sign reversal in simulator).
+ 
+ After this, I tuned the parameters of cost function starting from 1 for all the factors and came up with the final set of parameters with which car is able to drive around the track successfully.
+ 
