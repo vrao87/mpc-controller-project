@@ -55,7 +55,7 @@ The objective of the model is to find the optimum value of a and delta that will
  Way point co-ordinates as well as car's location is provided by simulator in Map co-ordinates system. Once the way point and car's state variables are recieved from simulator, waypoints are transformed to local co-ordinates of car. Using transformed waypoint, a third degree polynomial is fitted using the utility function. Current cross track error cte, and orientation error psi, can be computed using the co-efficients of polynomial.
  
  ## Handling latency
-  To handle latency in system, I have projected the state of the car in future by 'latency' time period which is 100ms(0.1s). Based on the suggestions from discussion forum, I have considered latency before transforming the way points to car co-ordinates. State as received from the simulator is projected ahead in time and the waypoints are then transformed to this new predicted state of the car. Polynomial fitting and subsequent cte and epsi calculation is done after this step.
+  To handle latency in system, I have projected the state of the car in future by 'latency' time period which is 100ms(0.1s). Based on the suggestions from discussion forum, I have considered latency before transforming the way points to car co-ordinates. This I realized simplifies the calculations as the state variables are based at origin itself. State as received from the simulator is projected ahead in time and the waypoints are then transformed to this new predicted state of the car. Polynomial fitting and subsequent cte and epsi calculation is done after this step.
  
  State of the car to be fed into the solver is 
  0.0, 0.0, 0.0, v, cte, epsi
