@@ -6,7 +6,7 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
-size_t N = 10;
+size_t N = 12;
 double dt = 0.1;
 
 // Both the reference cross track and orientation errors are 0.
