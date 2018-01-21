@@ -96,7 +96,7 @@ int main() {
           double acc = j[1]["throttle"];
 
           // Convert mph to m/s
-          const double v = v_mph * 0.447;// mph to m/s
+          double v = v_mph * 0.447;// mph to m/s
 
           // Number of waypoints
           const int N = ptsx.size(); 
@@ -107,14 +107,12 @@ int main() {
           *
           */
           // project the state ahead to account for latency
-          //const double latency = 0.1;
-          // px = px + v  * cos(psi) * latency;
-          // py = 0; // sin(psi) = 0, v*sin(psi)*latency can be ignored
-          // psi = -v * delta * latency/Lf;
-          // epsi = -atan(coeffs[1]) + psi; 
-          // cte= polyeval(coeffs,0)+ v * sin(epsi)*latency;
-          // v += acc * latency;
-          // state << px,py,psi,cte,epsi;
+           const double latency = 0.1;
+           const double Lf = 2.67;
+           px = px + v * cos(psi) * latency;
+           py = py + v * sin(psi) * latency; // sin(psi) = 0, v*sin(psi)*latency can be ignored
+           psi = psi - v * delta * latency/Lf;
+           v += acc * latency;
 
           /* Convert to the vehicle coordinate system */
           Eigen::VectorXd ptsx_veh(N);
